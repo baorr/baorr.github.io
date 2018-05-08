@@ -99,7 +99,7 @@ img {
     margin-left: 0;
     opacity: 1;
     transition: 0s; }
-  .button:hover {
+  .button:hover, .button:focus {
     background-color: rgba(33, 150, 243, 0.9); }
 
 .text-button {
@@ -141,7 +141,7 @@ img {
     margin-left: 0;
     opacity: 1;
     transition: 0s; }
-  .text-button:hover {
+  .text-button:hover, .text-button:focus {
     color: rgba(33, 150, 243, 0.9);
     background-color: rgba(220, 220, 220, 0.8); }
 
