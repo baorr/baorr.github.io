@@ -15,7 +15,14 @@ body {
   margin: 0;
   font-family: Helvetica Neue, HelveticaNeue, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none; }
 
 html {
   font-size: 1em; }
