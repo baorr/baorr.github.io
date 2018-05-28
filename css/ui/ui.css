@@ -388,7 +388,7 @@ img {
           top: 0;
           z-index: 1;
           width: 100%; }
-        .menu-wrapper .vertical-menu-wrapper ul > li:hover ul {
+        .menu-wrapper .vertical-menu-wrapper ul > li:hover ul, .menu-wrapper .vertical-menu-wrapper ul > li:focus ul, .menu-wrapper .vertical-menu-wrapper ul > li:active ul {
           display: block; }
       .menu-wrapper .vertical-menu-wrapper ul li.sub-menu:before {
         content: " ";
