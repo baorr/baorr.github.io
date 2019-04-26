@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+</head>
+    
+<body>
+
+<script>
+var db;
+
+function indexedDBOk() {
+	return "indexedDB" in window;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	//No support? Go in the corner and pout.
+	if(!indexedDBOk()) return;
+
+	var openRequest = indexedDB.open("ios8b",1);
+
+	openRequest.onupgradeneeded = function(e) {
+		var thisDB = e.target.result;
+
+		console.log("running onupgradeneeded");
+
+		if(!thisDB.objectStoreNames.contains("people")) {
+			thisDB.createObjectStore("people", {keyPath:"id"});
+		}
+
+		if(!thisDB.objectStoreNames.contains("notes")) {
+			thisDB.createObjectStore("notes", {keyPath:"uid"});
+		}
+
+	}
+
+	openRequest.onsuccess = function(e) {
+		console.log("running onsuccess");
+
+		db = e.target.result;
+
+		console.log("Current Object Stores");
+		console.dir(db.objectStoreNames);
+
+		//Listen for add clicks
+		document.querySelector("#addButton").addEventListener("click", addPerson, false);
+	}	
+
+	openRequest.onerror = function(e) {
+		//Do something for the error
+	}
+
+
+},false);
+
+
+function addPerson(e) {
+	console.log("About to add person and note");
+
+	var id = Number(document.querySelector("#key").value);
+	
+	//Get a transaction
+	//default for OS list is all, default for type is read
+	var transaction = db.transaction(["people"],"readwrite");
+	//Ask for the objectStore
+	var store = transaction.objectStore("people");
+
+	//Define a person
+	var person = {
+		name:"Ray",
+		created:new Date().toString(),
+		id:id
+	}
+
+	//Perform the add
+	var request = store.add(person);
+
+	request.onerror = function(e) {
+		console.log("Error",e.target.error.name);
+		//some type of error handler
+	}
+
+	request.onsuccess = function(e) {
+		console.log("Woot! Did it");
+	}
+	
+	//Define a note
+	var note = {
+		note:"note",
+		created:new Date().toString(),
+		uid:id
+	}
+
+	var transaction2 = db.transaction(["notes"],"readwrite");
+	//Ask for the objectStore
+	var store2 = transaction2.objectStore("notes");
+
+	//Perform the add
+	var request2 = store2.add(note);
+
+	request2.onerror = function(e) {
+		console.log("Error",e.target.error.name);
+		//some type of error handler
+	}
+
+	request2.onsuccess = function(e) {
+		console.log("Woot! Did it");
+	}
+	
+}
+</script>
+
+enter key: <input id="key"><br/>
+<button id="addButton">Add Data</button>
+
+</body>
+</html>
