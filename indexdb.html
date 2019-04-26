@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<title>IOS IndexDB Test</title>
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+</head>
+    
+<body>
+<div id="info"></div>
+
+<script>
+var info = document.getElementById('info');
+var str = navigator.appVersion;
+if(!indexedDBOk()){
+	str += ' Not Support IndexDB';
+}
+info.innerHTML = str;
+var db;
+function indexedDBOk() {
+	return "indexedDB" in window;
+}
+
+function appendDiv(str){
+	var div = document.createElement('div');
+	div.innerHTML = str;
+	//return div;
+
+	info.appendChild(div);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+	//No support? Go in the corner and pout.
+	if(!indexedDBOk()) return;
+
+	var openRequest = indexedDB.open("ios8b",1);
+
+	openRequest.onupgradeneeded = function(e) {
+		var thisDB = e.target.result;
+
+		appendDiv("running onupgradeneeded");
+
+		if(!thisDB.objectStoreNames.contains("people")) {
+			thisDB.createObjectStore("people", {keyPath:"id"});
+		}
+
+	}
+
+	openRequest.onsuccess = function(e) {
+		appendDiv("running onsuccess");
+
+		db = e.target.result;
+
+		appendDiv("Current Object Stores");
+
+		//Listen for add clicks
+		document.querySelector("#addButton").addEventListener("click", addPerson, false);
+	}	
+
+	openRequest.onerror = function(e) {
+		//Do something for the error
+	}
+
+
+},false);
+
+
+function addPerson(e) {
+	appendDiv("About to add person and note");
+
+	var id = Number(document.querySelector("#key").value);
+	
+	//Get a transaction
+	//default for OS list is all, default for type is read
+	var transaction = db.transaction(["people"],"readwrite");
+	//Ask for the objectStore
+	var store = transaction.objectStore("people");
+
+	//Define a person
+	var person = {
+		name:"Ray",
+		created:new Date().toString(),
+		id:id
+	}
+
+	//Perform the add
+	var request = store.add(person);
+
+	request.onerror = function(e) {
+		appendDiv(`Error${e.target.error.name}`);
+		//some type of error handler
+	}
+
+	request.onsuccess = function(e) {
+		appendDiv("Woot! Did it");
+	}
+	
+}
+</script>
+
+enter key: <input id="key"><br/>
+<button id="addButton">Add Data</button>
+
+</body>
+</html>
