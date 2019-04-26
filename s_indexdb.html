@@ -14,6 +14,7 @@ var str = navigator.appVersion;
 if(!indexedDBOk()){
 	str += ' Not Support IndexDB';
 }
+info.innerHTML = str;
 var db;
 function indexedDBOk() {
 	return "indexedDB" in window;
