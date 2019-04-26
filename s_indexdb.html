@@ -1,14 +1,20 @@
 <!doctype html>
 <html>
 <head>
+<title>IOS IndexDB Test</title>
 <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 </head>
     
 <body>
+<div id="info"></div>
 
 <script>
+var info = document.getElementById('info');
+var str = navigator.appVersion;
+if(!indexedDBOk()){
+	str += ' Not Support IndexDB';
+}
 var db;
-
 function indexedDBOk() {
 	return "indexedDB" in window;
 }
